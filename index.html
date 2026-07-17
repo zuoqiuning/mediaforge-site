@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediaForge - 全能媒体处理工具箱</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+        
+        /* 头部 */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* 特性区域 */
+        .features {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+        
+        .features h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+            color: #333;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+        
+        .feature-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: #fff;
+        }
+        
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: #333;
+        }
+        
+        .feature-card p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        /* 下载区域 */
+        .download {
+            background: #f8f9fa;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        
+        .download h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .download p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 16px 48px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .version-info {
+            margin-top: 24px;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        /* 更新日志 */
+        .changelog {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+        
+        .changelog h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 40px;
+            color: #333;
+        }
+        
+        .changelog-list {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 40px;
+        }
+        
+        .changelog-item {
+            padding: 16px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .changelog-item:last-child {
+            border-bottom: none;
+        }
+        
+        .changelog-version {
+            font-size: 20px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        
+        .changelog-date {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+        
+        .changelog-details {
+            color: #666;
+        }
+        
+        .changelog-details li {
+            margin-bottom: 8px;
+            margin-left: 20px;
+        }
+        
+        /* 页脚 */
+        .footer {
+            background: #333;
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .footer p {
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 36px;
+            }
+            
+            .header p {
+                font-size: 16px;
+            }
+            
+            .features h2,
+            .download h2,
+            .changelog h2 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <header class="header">
+        <h1>MediaForge</h1>
+        <p>全能媒体处理工具箱 - 视频、音频、图片一站式处理</p>
+    </header>
+
+    <!-- 特性介绍 -->
+    <section class="features">
+        <h2>核心功能</h2>
+        <div class="feature-grid">
+            <!-- 视频处理 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+                    </svg>
+                </div>
+                <h3>视频处理</h3>
+                <p>支持多种视频格式转换，MKV音视频分流，满足各种视频处理需求</p>
+            </div>
+
+            <!-- 音频处理 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/>
+                    </svg>
+                </div>
+                <h3>音频处理</h3>
+                <p>音频格式转换，NCM格式解密，轻松处理各种音频文件</p>
+            </div>
+
+            <!-- 图片处理 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                    </svg>
+                </div>
+                <h3>图片处理</h3>
+                <p>图片格式转换，支持批量处理，高效完成图片处理任务</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 下载区域 -->
+    <section class="download" id="download">
+        <h2>立即下载</h2>
+        <p>免费、开源、无广告的媒体处理工具</p>
+        <a href="#" class="download-btn" id="downloadBtn">下载 MediaForge</a>
+        <div class="version-info">
+            <p>当前版本: <span id="currentVersion">加载中...</span> | 文件大小: <span id="fileSize">加载中...</span></p>
+            <p>支持系统: Windows 10/11 (64位)</p>
+        </div>
+    </section>
+
+    <!-- 更新日志 -->
+    <section class="changelog">
+        <h2>更新日志</h2>
+        <div class="changelog-list" id="changelogList">
+            <div class="changelog-item">
+                <div class="changelog-version">v0.1.0</div>
+                <div class="changelog-date">2025-07-17</div>
+                <ul class="changelog-details">
+                    <li>MediaForge 首个版本发布</li>
+                    <li>支持视频格式转换</li>
+                    <li>支持音频格式转换</li>
+                    <li>支持图片格式转换</li>
+                    <li>支持MKV音视频分流</li>
+                    <li>支持NCM格式解密</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>&copy; 2025 MediaForge. All rights reserved.</p>
+        <p>Made with ❤️ by MediaForge Team</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 版本信息（从 version.json 加载）
+        const VERSION_JSON_URL = 'https://mediaforge.clouddn.com/version.json';
+
+        // 加载版本信息
+        async function loadVersionInfo() {
+            try {
+                const response = await fetch(VERSION_JSON_URL);
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // 更新版本号
+                    document.getElementById('currentVersion').textContent = 'v' + data.version;
+                    document.getElementById('fileSize').textContent = data.fileSize;
+                    
+                    // 更新下载链接
+                    const downloadBtn = document.getElementById('downloadBtn');
+                    downloadBtn.href = data.downloadUrl;
+                    
+                    // 更新更新日志
+                    if (data.changelog && data.changelog.length > 0) {
+                        updateChangelog(data);
+                    }
+                }
+            } catch (error) {
+                console.log('加载版本信息失败:', error);
+                document.getElementById('currentVersion').textContent = 'v0.1.0';
+                document.getElementById('fileSize').textContent = '235MB';
+            }
+        }
+
+        // 更新更新日志显示
+        function updateChangelog(data) {
+            const changelogList = document.getElementById('changelogList');
+            const newItem = document.createElement('div');
+            newItem.className = 'changelog-item';
+            newItem.innerHTML = `
+                <div class="changelog-version">v${data.version}</div>
+                <div class="changelog-date">${data.releaseDate}</div>
+                <ul class="changelog-details">
+                    ${data.changelog.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            `;
+            changelogList.insertBefore(newItem, changelogList.firstChild);
+        }
+
+        // 页面加载完成后获取版本信息
+        document.addEventListener('DOMContentLoaded', loadVersionInfo);
+    </script>
+</body>
+</html>

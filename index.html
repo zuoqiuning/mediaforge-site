@@ -685,7 +685,7 @@
                     document.getElementById('fileSize').textContent = data.fileSize;
 
                     // 更新下载链接
-                    document.getElementById('downloadBtn').href = data.downloadUrl;
+                    document.getElementById('downloadBtn').href = data.downloadUrl.trim();
 
                     // 渲染更新日志
                     if (data.changelog && data.changelog.length > 0) {

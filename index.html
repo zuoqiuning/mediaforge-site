@@ -3,319 +3,674 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="./mediaforge.ico">
     <title>MediaForge - 全能媒体处理工具箱</title>
     <style>
-        /* 基础样式 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
+            color: #1a1a1a;
             background: #fff;
+            line-height: 1.6;
         }
-        
-        /* 头部 */
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
-            padding: 80px 20px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 48px;
-            margin-bottom: 16px;
-            font-weight: 700;
-        }
-        
-        .header p {
-            font-size: 20px;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        /* 特性区域 */
-        .features {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 80px 20px;
-        }
-        
-        .features h2 {
-            text-align: center;
-            font-size: 36px;
-            margin-bottom: 60px;
-            color: #333;
-        }
-        
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
-        
-        .feature-card {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 40px 30px;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 24px;
+            z-index: 1000;
+            transition: box-shadow 0.3s ease;
         }
-        
-        .feature-icon svg {
-            width: 40px;
-            height: 40px;
-            fill: #fff;
+
+        .navbar.scrolled {
+            box-shadow: 0 1px 12px rgba(0, 0, 0, 0.06);
         }
-        
-        .feature-card h3 {
-            font-size: 24px;
-            margin-bottom: 16px;
-            color: #333;
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 48px;
         }
-        
-        .feature-card p {
-            color: #666;
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            position: absolute;
+            left: 48px;
+        }
+
+        .nav-logo img {
+            width: 26px;
+            height: 26px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover img {
+            transform: scale(1.1);
+        }
+
+        .nav-logo span {
             font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
         }
-        
-        /* 下载区域 */
-        .download {
-            background: #f8f9fa;
-            padding: 80px 20px;
-            text-align: center;
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        
-        .download h2 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        
-        .download p {
-            font-size: 18px;
+
+        .nav-menu a {
             color: #666;
-            margin-bottom: 40px;
-        }
-        
-        .download-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
-            padding: 16px 48px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
             border-radius: 8px;
-            font-size: 18px;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        /* 导航按钮 hover 效果 */
+        .nav-menu a:hover {
+            color: #1a1a1a;
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        /* 导航按钮 active 选中状态 */
+        .nav-menu a.active {
+            color: #1a1a1a;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        .nav-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 2px;
+            background: #1a1a1a;
+            border-radius: 1px;
+        }
+
+        /* Hero 区域 */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 80px 48px;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 80px;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 520px;
+        }
+
+        /* 版本徽章 - 更醒目 */
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 28px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.9); }
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.1;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        .hero-desc {
+            font-size: 17px;
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 36px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 48px;
+        }
+
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: 600;
             text-decoration: none;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.25s ease;
         }
-        
-        .download-btn:hover {
+
+        .btn-download:hover {
+            background: #333;
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
-        
-        .version-info {
-            margin-top: 24px;
+
+        .btn-download:active {
+            transform: translateY(0);
+        }
+
+        .btn-download svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 12px;
             color: #999;
-            font-size: 14px;
+            margin-bottom: 4px;
         }
-        
+
+        .stat-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .hero-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 图标样式 */
+        .hero-icon {
+            width: 280px;
+            height: 280px;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* 功能区域 */
+        .features {
+            padding: 120px 48px;
+            background: #fafafa;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 72px;
+        }
+
+        .section-header h2 {
+            font-size: 40px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .section-header p {
+            font-size: 16px;
+            color: #888;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            padding: 36px 28px;
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: #e0e0e0;
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: #1a1a1a;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.08);
+        }
+
+        .feature-icon svg {
+            width: 24px;
+            height: 24px;
+            color: #fff;
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.7;
+        }
+
         /* 更新日志 */
         .changelog {
-            max-width: 800px;
+            padding: 120px 48px;
+        }
+
+        .changelog-container {
+            max-width: 700px;
             margin: 0 auto;
-            padding: 80px 20px;
         }
-        
-        .changelog h2 {
-            text-align: center;
-            font-size: 36px;
-            margin-bottom: 40px;
-            color: #333;
-        }
-        
+
         .changelog-list {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
-        
+
         .changelog-item {
-            padding: 16px 0;
-            border-bottom: 1px solid #e9ecef;
+            padding: 24px;
+            background: #fafafa;
+            border-radius: 12px;
+            border: 1px solid #eee;
         }
-        
-        .changelog-item:last-child {
-            border-bottom: none;
+
+        .changelog-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
         }
-        
+
         .changelog-version {
-            font-size: 20px;
+            font-size: 15px;
             font-weight: 600;
-            color: #667eea;
-            margin-bottom: 8px;
+            color: #1a1a1a;
         }
-        
+
         .changelog-date {
-            font-size: 14px;
+            font-size: 13px;
             color: #999;
-            margin-bottom: 12px;
         }
-        
+
         .changelog-details {
-            color: #666;
+            list-style: none;
         }
-        
+
         .changelog-details li {
-            margin-bottom: 8px;
-            margin-left: 20px;
+            font-size: 14px;
+            color: #666;
+            padding: 6px 0;
+            padding-left: 16px;
+            position: relative;
         }
-        
+
+        .changelog-details li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 5px;
+            height: 5px;
+            background: #ccc;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+
         /* 页脚 */
         .footer {
-            background: #333;
-            color: #fff;
-            padding: 40px 20px;
+            padding: 32px 48px;
+            border-top: 1px solid #eee;
             text-align: center;
         }
-        
+
         .footer p {
-            opacity: 0.8;
-            margin-bottom: 8px;
+            font-size: 13px;
+            color: #999;
         }
-        
-        .footer a {
-            color: #667eea;
-            text-decoration: none;
-        }
-        
+
         /* 响应式 */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 36px;
+        @media (max-width: 968px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 120px 24px 80px;
+                gap: 60px;
             }
-            
-            .header p {
-                font-size: 16px;
+
+            .hero-content {
+                max-width: 100%;
             }
-            
-            .features h2,
-            .download h2,
-            .changelog h2 {
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .hero-stats {
+                justify-content: center;
+            }
+
+            .hero-icon {
+                width: 280px;
+                height: 280px;
+            }
+
+            .features {
+                padding: 80px 24px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .changelog {
+                padding: 80px 24px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav-logo {
+                left: 20px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+                letter-spacing: -1px;
+            }
+
+            .hero-desc {
+                font-size: 15px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-download {
+                justify-content: center;
+            }
+
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 24px;
+            }
+
+            .hero-icon {
+                width: 220px;
+                height: 220px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header h2 {
                 font-size: 28px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 头部 -->
-    <header class="header">
-        <h1>MediaForge</h1>
-        <p>全能媒体处理工具箱 - 视频、音频、图片一站式处理</p>
-    </header>
-
-    <!-- 特性介绍 -->
-    <section class="features">
-        <h2>核心功能</h2>
-        <div class="feature-grid">
-            <!-- 视频处理 -->
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
-                    </svg>
-                </div>
-                <h3>视频处理</h3>
-                <p>支持多种视频格式转换，MKV音视频分流，满足各种视频处理需求</p>
+    <!-- 导航栏 -->
+    <nav class="navbar" id="navbar">
+        <a href="#" class="nav-logo">
+            <img src="./mediaforge.ico" alt="MediaForge">
+            <span>MediaForge</span>
+        </a>
+        <div class="nav-container">
+            <div class="nav-menu" id="navMenu">
+                <a href="#hero" class="active">首页</a>
+                <a href="#features">功能</a>
+                <a href="#changelog">更新日志</a>
             </div>
+        </div>
+    </nav>
 
-            <!-- 音频处理 -->
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/>
-                    </svg>
-                </div>
-                <h3>音频处理</h3>
-                <p>音频格式转换，NCM格式解密，轻松处理各种音频文件</p>
+    <!-- Hero 区域 -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                最新版本 v<span id="currentVersion">--</span>
             </div>
-
-            <!-- 图片处理 -->
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+            <h1>全能媒体处理工具箱</h1>
+            <p class="hero-desc">视频、音频、图片一站式处理。基于 FFmpeg、MKVToolNix、ImageMagick 等专业引擎打造，开箱即用。</p>
+            <div class="hero-actions">
+                <a href="#" class="btn-download" id="downloadBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
                     </svg>
-                </div>
-                <h3>图片处理</h3>
-                <p>图片格式转换，支持批量处理，高效完成图片处理任务</p>
+                    下载 v<span id="downloadVersion">--</span>
+                </a>
             </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-label">文件大小</span>
+                    <span class="stat-value" id="fileSize">--</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">系统要求</span>
+                    <span class="stat-value">Windows 10/11</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">价格</span>
+                    <span class="stat-value">免费</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <img src="./mediaforge.ico" alt="MediaForge" class="hero-icon">
         </div>
     </section>
 
-    <!-- 下载区域 -->
-    <section class="download" id="download">
-        <h2>立即下载</h2>
-        <p>免费、开源、无广告的媒体处理工具</p>
-        <a href="#" class="download-btn" id="downloadBtn">下载 MediaForge</a>
-        <div class="version-info">
-            <p>当前版本: <span id="currentVersion">加载中...</span> | 文件大小: <span id="fileSize">加载中...</span></p>
-            <p>支持系统: Windows 10/11 (64位)</p>
+    <!-- 功能区域 -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <div class="section-header">
+                <h2>核心功能</h2>
+                <p>满足你所有的媒体处理需求</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <h3>视频处理</h3>
+                    <p>格式转换、剪辑拼接、添加字幕水印、硬件加速编码</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18V5l12-2v13M9 18a3 3 0 11-6 0 3 3 0 016 0zM21 16a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <h3>音频处理</h3>
+                    <p>格式转换、NCM/QMC 解密、调节比特率采样率</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <h3>图片处理</h3>
+                    <p>批量转换、调整尺寸、添加水印、编辑 EXIF 信息</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                        </svg>
+                    </div>
+                    <h3>MKV 工具</h3>
+                    <p>专业 MKV 封装与拆封，多音轨多字幕轨道支持</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h3>硬件加速</h3>
+                    <p>支持 NVIDIA NVENC、AMD AMF、Intel QSV 编码加速</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <h3>安全可靠</h3>
+                    <p>完全免费，无广告无追踪，本地处理不上传</p>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- 更新日志 -->
-    <section class="changelog">
-        <h2>更新日志</h2>
-        <div class="changelog-list" id="changelogList">
-            <div class="changelog-item">
-                <div class="changelog-version">v0.1.0</div>
-                <div class="changelog-date">2025-07-17</div>
-                <ul class="changelog-details">
-                    <li>MediaForge 首个版本发布</li>
-                    <li>支持视频格式转换</li>
-                    <li>支持音频格式转换</li>
-                    <li>支持图片格式转换</li>
-                    <li>支持MKV音视频分流</li>
-                    <li>支持NCM格式解密</li>
-                </ul>
+    <section class="changelog" id="changelog">
+        <div class="changelog-container">
+            <div class="section-header">
+                <h2>更新日志</h2>
+                <p>查看最新版本更新内容</p>
             </div>
+            <div class="changelog-list" id="changelogList"></div>
         </div>
     </section>
 
     <!-- 页脚 -->
     <footer class="footer">
-        <p>&copy; 2025 MediaForge. All rights reserved.</p>
-        <p>Made with ❤️ by MediaForge Team</p>
+        <p>MediaForge - 全能媒体处理工具箱 | Free & Open Source</p>
     </footer>
 
-    <!-- JavaScript -->
     <script>
-        // 版本信息（从 version.json 加载）
-        const VERSION_JSON_URL = 'https://tibbyme8q.hb-bkt.clouddn.com/site/version.json';
+        // 版本信息文件路径
+        const VERSION_JSON_URL = './version.json';
+
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 10);
+        });
+
+        // 导航栏当前区域高亮
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-menu a');
+
+        function updateActiveNav() {
+            const scrollPos = window.scrollY + 100;
+
+            sections.forEach(section => {
+                const top = section.offsetTop;
+                const height = section.offsetHeight;
+                const id = section.getAttribute('id');
+
+                if (scrollPos >= top && scrollPos < top + height) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
 
         // 加载版本信息
         async function loadVersionInfo() {
@@ -323,43 +678,57 @@
                 const response = await fetch(VERSION_JSON_URL);
                 if (response.ok) {
                     const data = await response.json();
-                    
+
                     // 更新版本号
-                    document.getElementById('currentVersion').textContent = 'v' + data.version;
+                    document.getElementById('currentVersion').textContent = data.version;
+                    document.getElementById('downloadVersion').textContent = data.version;
                     document.getElementById('fileSize').textContent = data.fileSize;
-                    
+
                     // 更新下载链接
-                    const downloadBtn = document.getElementById('downloadBtn');
-                    downloadBtn.href = data.downloadUrl;
-                    
-                    // 更新更新日志
+                    document.getElementById('downloadBtn').href = data.downloadUrl;
+
+                    // 渲染更新日志
                     if (data.changelog && data.changelog.length > 0) {
-                        updateChangelog(data);
+                        renderChangelog(data);
                     }
                 }
             } catch (error) {
-                console.log('加载版本信息失败:', error);
-                document.getElementById('currentVersion').textContent = 'v0.1.0';
+                console.error('加载版本信息失败:', error);
+                document.getElementById('currentVersion').textContent = '0.1.0';
+                document.getElementById('downloadVersion').textContent = '0.1.0';
                 document.getElementById('fileSize').textContent = '235MB';
             }
         }
 
-        // 更新更新日志显示
-        function updateChangelog(data) {
-            const changelogList = document.getElementById('changelogList');
-            const newItem = document.createElement('div');
-            newItem.className = 'changelog-item';
-            newItem.innerHTML = `
-                <div class="changelog-version">v${data.version}</div>
-                <div class="changelog-date">${data.releaseDate}</div>
+        // 渲染更新日志
+        function renderChangelog(data) {
+            const container = document.getElementById('changelogList');
+            const item = document.createElement('div');
+            item.className = 'changelog-item';
+            item.innerHTML = `
+                <div class="changelog-header">
+                    <span class="changelog-version">v${data.version}</span>
+                    <span class="changelog-date">${data.releaseDate}</span>
+                </div>
                 <ul class="changelog-details">
-                    ${data.changelog.map(item => `<li>${item}</li>`).join('')}
+                    ${data.changelog.map(text => `<li>${text}</li>`).join('')}
                 </ul>
             `;
-            changelogList.insertBefore(newItem, changelogList.firstChild);
+            container.insertBefore(item, container.firstChild);
         }
 
-        // 页面加载完成后获取版本信息
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // 初始化
         document.addEventListener('DOMContentLoaded', loadVersionInfo);
     </script>
 </body>
